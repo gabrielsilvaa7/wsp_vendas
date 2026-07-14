@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WSP - Assistente de Vendas Interativo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .step-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.2);
+        }
+        .active-step {
+            border-color: #10b981 !important;
+            background-color: #064e3b !important;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+        .active-step-objection {
+            border-color: #f97316 !important; /* Orange 500 */
+            background-color: #431407 !important; /* Orange 950 */
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+        }
+        /* Custom scrollbar for inner content */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.5);
+            border-radius: 10px;
+        }
+        
+        .obj-btn.active {
+            background-color: #ea580c; /* orange-600 */
+            color: white;
+            border-color: #ea580c;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased overflow-x-hidden">
+
+    <!-- Header Principal -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40 px-4 py-4 sm:px-6">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <i class="fas fa-network-wired text-slate-950 text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-emerald-400 leading-tight">Wiser Sales Platform</h1>
+                    <p class="text-xs text-slate-400">Hub de Atendimento • Funil de 8 Passos</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="window.print()" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                    <i class="fas fa-print mr-1"></i> Imprimir Roteiro
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative">
+        
+        <!-- Coluna Esquerda: Linha do Tempo Visual -->
+        <section class="lg:col-span-4 xl:col-span-4 flex flex-col gap-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 sticky top-24">
+                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4 flex items-center justify-between">
+                    <span>Etapas do Funil</span>
+                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-full"><i class="fas fa-mouse-pointer mr-1"></i>Clique</span>
+                </h2>
+                
+                <div class="relative pl-6 border-l-2 border-slate-800 space-y-4">
+                    <!-- Steps 1 to 7 -->
+                    <div id="card-step-1" onclick="selectStep(1)" class="step-card relative cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-3 sm:p-4 active-step">
+                        <div class="absolute -left-[29px] sm:-left-[35px] top-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-500 border-2 border-emerald-500 text-[10px] sm:text-xs font-bold flex items-center justify-center text-slate-950 transition-all step-number">1</div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-200 text-sm sm:text-base">Apresentação</h3>
+                            <span class="text-xs text-slate-500"><i class="fas fa-id-card text-emerald-400"></i></span>
+                        </div>
+                    </div>
+
+                    <div id="card-step-2" onclick="selectStep(2)" class="step-card relative cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-3 sm:p-4">
+                        <div class="absolute -left-[29px] sm:-left-[35px] top-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-900 border-2 border-slate-800 text-[10px] sm:text-xs font-bold flex items-center justify-center text-slate-400 transition-all step-number">2</div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-200 text-sm sm:text-base">Conexão</h3>
+                            <span class="text-xs text-slate-500"><i class="fas fa-stethoscope text-emerald-400"></i></span>
+                        </div>
+                    </div>
+
+                    <div id="card-step-3" onclick="selectStep(3)" class="step-card relative cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-3 sm:p-4">
+                        <div class="absolute -left-[29px] sm:-left-[35px] top-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-900 border-2 border-slate-800 text-[10px] sm:text-xs font-bold flex items-center justify-center text-slate-400 transition-all step-number">3</div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-200 text-sm sm:text-base">Decisão Imediata</h3>
+                            <span class="text-xs text-slate-500"><i class="fas fa-handshake text-emerald-400"></i></span>
+                        </div>
+                    </div>
+
+                    <div id="card-step-4" onclick="selectStep(4)" class="step-card relative cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-3 sm:p-4">
+                        <div class="absolute -left-[29px] sm:-left-[35px] top-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-900 border-2 border-slate-800 text-[10px] sm:text-xs font-bold flex items-center justify-center text-slate-400 transition-all step-number">4</div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-200 text-sm sm:text-base">Speech</h3>
+                            <span class="text-xs text-slate-500"><i class="fas fa-play text-emerald-400"></i></span>
+                        </div>
+                    </div>
+
+                    <div id="card-step-5" onclick="selectStep(5)" class="step-card relative cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-3 sm:p-4">
+                        <div class="absolute -left-[29px] sm:-left-[35px] top-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-900 border-2 border-slate-800 text-[10px] sm:text-xs font-bold flex items-center justify-center text-slate-400 transition-all step-number">5</div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-200 text-sm sm:text-base">Fechamento</h3>
+                            <span class="text-xs text-slate-500"><i class="fas fa-credit-card text-emerald-400"></i></span>
+                        </div>
+                    </div>
+
+                    <div id="card-step-6" onclick="selectStep(6)" class="step-card relative cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-3 sm:p-4">
+                        <div class="absolute -left-[29px] sm:-left-[35px] top-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-900 border-2 border-slate-800 text-[10px] sm:text-xs font-bold flex items-center justify-center text-slate-400 transition-all step-number">6</div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-200 text-sm sm:text-base">Referidos</h3>
+                            <span class="text-xs text-slate-500"><i class="fas fa-users-cog text-emerald-400"></i></span>
+                        </div>
+                    </div>
+
+                    <div id="card-step-7" onclick="selectStep(7)" class="step-card relative cursor-pointer bg-slate-950 border border-slate-800 rounded-xl p-3 sm:p-4">
+                        <div class="absolute -left-[29px] sm:-left-[35px] top-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-900 border-2 border-slate-800 text-[10px] sm:text-xs font-bold flex items-center justify-center text-slate-400 transition-all step-number">7</div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-slate-200 text-sm sm:text-base">Validação</h3>
+                            <span class="text-xs text-slate-500"><i class="fas fa-paper-plane text-emerald-400"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Divisor Visual para Etapa Alternativa -->
+                    <div class="h-px w-full bg-gradient-to-r from-transparent via-slate-700 to-transparent my-2"></div>
+
+                    <!-- Step 8: OBJEÇÕES (Destacado) -->
+                    <div id="card-step-8" onclick="selectStep(8)" class="step-card relative cursor-pointer bg-orange-950/30 border border-orange-900/50 hover:border-orange-500 rounded-xl p-3 sm:p-4">
+                        <div class="absolute -left-[29px] sm:-left-[35px] top-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-900 border-2 border-slate-800 text-[10px] sm:text-xs font-bold flex items-center justify-center text-slate-400 transition-all step-number" id="step-number-8"><i class="fas fa-fire text-orange-500"></i></div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-orange-400 text-sm sm:text-base">Central de Objeções</h3>
+                            <span class="text-xs text-orange-500"><i class="fas fa-shield-alt"></i></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Coluna Direita: Painel Interativo de Detalhes -->
+        <section class="lg:col-span-8 xl:col-span-8 flex flex-col gap-6 w-full">
+            
+            <!-- Dossiê do Lead (Anotações Dinâmicas) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg relative z-10">
+                <h3 class="text-sm font-bold text-emerald-400 mb-3 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fas fa-user-edit"></i> Dossiê do Cliente (Autopreenchimento)
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Seu Nome (Vendedor)</label>
+                        <input type="text" id="input-seller" placeholder="Ex: José Gabriel" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Nome do Cliente</label>
+                        <input type="text" id="input-lead" placeholder="Ex: João Silva" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors placeholder:text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Quem Indicou?</label>
+                        <input type="text" id="input-ref" placeholder="Ex: Maria" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors placeholder:text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Dor / Motivo Principal</label>
+                        <input type="text" id="input-pain" placeholder="Ex: Promoção na Empresa" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors placeholder:text-slate-700">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAINEL PRINCIPAL (Alterna entre Passos 1-7 e Passo 8) -->
+            <div id="detail-panel" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 flex flex-col justify-between min-h-[550px] shadow-2xl relative transition-colors duration-300">
+                
+                <!-- CONTEÚDO PADRÃO (Passos 1 ao 7) -->
+                <div id="standard-content" class="block">
+                    <!-- Seção de Título Ativo -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-800 pb-4 mb-4 gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-emerald-500/10 text-emerald-400 shrink-0">
+                                <i id="active-step-icon" class="fas fa-id-card"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider" id="active-step-label">Passo 1</span>
+                                <h2 class="text-xl sm:text-2xl font-bold text-slate-100" id="active-step-title">Apresentação</h2>
+                            </div>
+                        </div>
+                        
+                        <!-- Seletor de Tipo de Cliente (Indicação vs Conhecido) -->
+                        <div id="client-type-selector" class="flex items-center bg-slate-950 border border-slate-800 p-1 rounded-lg shrink-0">
+                            <button onclick="setSubMode('referido')" id="btn-sub-referido" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded bg-emerald-500 text-slate-950 transition-colors">INDICAÇÃO</button>
+                            <button onclick="setSubMode('conhecido')" id="btn-sub-conhecido" class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded text-slate-400 hover:text-slate-200 transition-colors">AMIGO</button>
+                        </div>
+                    </div>
+
+                    <!-- Bloco Interno de Informação -->
+                    <div class="space-y-5">
+                        <div>
+                            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-2">
+                                <i class="fas fa-bullseye text-emerald-400"></i> Objetivo da Etapa
+                            </h4>
+                            <p class="text-sm text-slate-300 leading-relaxed" id="active-step-objective">Carregando...</p>
+                        </div>
+
+                        <!-- Caixa do Script Roteirizado -->
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-5 relative group">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3 flex items-center justify-between">
+                                <span>O que falar (Leia com naturalidade)</span>
+                                <button onclick="copyScript('active-step-script')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded text-[10px] sm:text-xs transition flex items-center gap-1">
+                                    <i class="far fa-copy"></i> Copiar Texto
+                                </button>
+                            </h4>
+                            
+                            <div class="custom-scrollbar max-h-[350px] overflow-y-auto pr-2">
+                                <p class="text-sm sm:text-base text-slate-200 leading-relaxed border-l-2 border-emerald-500 pl-3 py-1 bg-slate-950/50" id="active-step-script">
+                                    Carregando script...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Avisos e Dicas -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4">
+                                <h5 class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-2"><i class="fas fa-lightbulb mr-1"></i> Dica de Ouro</h5>
+                                <p class="text-sm text-slate-300" id="active-step-tip">Carregando...</p>
+                            </div>
+                            <div class="bg-rose-500/5 border border-rose-500/20 rounded-xl p-4">
+                                <h5 class="text-[11px] font-bold text-rose-400 uppercase tracking-wider mb-2"><i class="fas fa-ban mr-1"></i> Evite a todo custo</h5>
+                                <p class="text-sm text-slate-300" id="active-step-donts">Carregando...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTEÚDO OBJEÇÕES (Passo 8) -->
+                <div id="objections-content" class="hidden">
+                    <div class="flex items-center gap-3 border-b border-orange-900/50 pb-4 mb-5">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl bg-orange-500 text-slate-950 shrink-0 shadow-lg shadow-orange-500/20">
+                            <i class="fas fa-fire-alt"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-orange-500 uppercase tracking-wider">Arsenal de Quebra</span>
+                            <h2 class="text-xl sm:text-2xl font-bold text-slate-100">Central de Objeções</h2>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-slate-400 mb-4">Clique na objeção que o cliente usou para carregar o argumento de resposta (com base no treinamento WSP):</p>
+
+                    <!-- Teclado de Objeções -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6" id="objections-grid">
+                        <!-- Botões gerados via JS -->
+                    </div>
+
+                    <!-- Display da Objeção Selecionada -->
+                    <div id="objection-display" class="bg-slate-950 border border-orange-500/30 rounded-xl p-5 hidden relative">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-orange-400 mb-3 flex items-center justify-between">
+                            <span id="obj-display-title"><i class="fas fa-comment-dots mr-2"></i> Script de Resposta</span>
+                            <button onclick="copyScript('obj-display-text')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded text-[10px] sm:text-xs transition flex items-center gap-1">
+                                <i class="far fa-copy"></i> Copiar Texto
+                            </button>
+                        </h4>
+                        <div class="custom-scrollbar max-h-[300px] overflow-y-auto pr-2">
+                            <p class="text-sm sm:text-base text-slate-200 leading-relaxed border-l-2 border-orange-500 pl-3 py-1 bg-orange-950/20" id="obj-display-text">
+                                Selecione uma objeção acima.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controles de Navegação -->
+                <div class="flex items-center justify-between border-t border-slate-800 pt-5 mt-6">
+                    <button onclick="prevStep()" class="px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition font-semibold flex items-center gap-2 disabled:opacity-50" id="btn-prev">
+                        <i class="fas fa-arrow-left"></i> Anterior
+                    </button>
+                    <div class="text-xs font-bold text-slate-500 bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="progress-container">
+                        ETAPA <span id="progress-indicator" class="text-emerald-400">1</span> DE 7
+                    </div>
+                    <button onclick="nextStep()" class="px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-500 text-slate-50 font-bold rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/20" id="btn-next">
+                        Próximo <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notificação Flutuante (Toast) -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 sm:bottom-10 sm:right-10 bg-emerald-500 text-slate-950 px-4 py-3 sm:px-6 sm:py-4 rounded-xl shadow-2xl transform translate-y-32 opacity-0 transition-all duration-300 ease-out z-50 flex items-center gap-3 pointer-events-none font-bold">
+        <i class="fas fa-check-circle text-lg sm:text-xl"></i>
+        <span id="toast-msg" class="text-sm sm:text-base">Texto copiado!</span>
+    </div>
+
+    <script>
+        // --- BANCO DE DADOS: PASSOS 1 A 7 ---
+        const stepData = {
+            1: {
+                title: "Apresentação", label: "Passo 1", icon: "fa-id-card",
+                objective: "Se apresentar gerando impacto e credibilidade imediata. O objetivo é desarmar o cliente, gerando conexão ao citar um amigo em comum ou pedindo ajuda.",
+                referido: {
+                    script: "<strong>Você:</strong> Alô, <strong>[Nome do Cliente]</strong>, tudo bem? Aqui é o <strong>[Seu Nome]</strong>!<br><br><strong>Você:</strong> <strong>[Nome do Cliente]</strong>, eu estou te ligando a pedido da <strong>[Nome da pessoa que indicou]</strong>! Ela te avisou que eu entraria em contato?<br><br><em>(Espera resposta)</em><br><br><strong>Você:</strong> Ah, é o seguinte: a <strong>[Nome da pessoa]</strong> pensou em você porque recentemente ela se matriculou numa plataforma para estudar inglês online e gostou bastante!<br><br>É um curso bem imersivo, muito legal para quem tem pouco tempo e precisa desenvolver o Inglês. Ela pensou em você com muito carinho, então estou ligando para saber se faz sentido essa indicação...<br><br>Como é que está o seu inglês hoje?",
+                    tip: "Fale de forma natural e sempre sorrindo. O sorriso muda o tom da sua voz e transmite energia.",
+                    donts: "Nunca fale com entonação de atendente de telemarketing ou faça leituras robóticas."
+                },
+                conhecido: {
+                    script: "<strong>Você:</strong> Oi, <strong>[Nome do Cliente]</strong>, tudo bem? <em>(Espera responder)</em><br><br><strong>Você:</strong> Eu estou te ligando pelo seguinte: eu acabei de ser selecionado para trabalhar de home office na Wise Up, você já ouviu falar da nossa escola? <em>(Esperar resposta)</em><br><br><strong>Você:</strong> É a maior escola de inglês para adultos da América Latina. Como estou começando agora, preciso falar com bastante gente para treinar as minhas ligações.<br><br><strong>Você:</strong> Eu tenho também uma bolsa parcial de estudos para liberar para amigos. Então, seja para você usar essa bolsa ou só para me ajudar no meu treino de hoje, me deixa entender... como está o seu inglês?",
+                    tip: "Apele para a amizade. Deixe claro que ele está te ajudando muito apenas por ouvir a sua apresentação de treinamento.",
+                    donts: "Evite parecer desesperado por vender. É uma ligação profissional de amigos."
+                }
+            },
+            2: {
+                title: "Conexão (Diagnóstico)", label: "Passo 2", icon: "fa-stethoscope",
+                objective: "Fazer perguntas estratégicas para extrair a 'dor' profissional, financeira ou pessoal que a pessoa tem por não falar inglês. Ouça mais e fale menos.",
+                referido: {
+                    script: "<strong>Você:</strong> Legal. Me conta um pouco, onde você mora hoje e o que você faz profissionalmente?<br><br><strong>Você:</strong> Como é que o inglês mais te ajudaria hoje? O que mudaria na sua carreira se você já falasse inglês fluentemente?<br><br><strong>Você:</strong> <em>(Aprofundando a dor)</em> Me explica melhor... Você já perdeu alguma oportunidade de emprego ou promoção por não falar inglês? Ou já passou algum aperto em viagem por causa disso?<br><br><strong>Você:</strong> <em>(Pergunta Confrontativa)</em> Certo, e se você precisa de inglês para <strong>[Dor do Cliente]</strong>, por que até agora você não resolveu isso? O que te impede de estudar?<br><br><strong>Você:</strong> <em>(Ganhando o SIM)</em> Entendi. E se eu conseguir resolver esse seu problema, e claro, você gostar do curso e couber no bolso e no tempo, você está disposto a começar a resolver o seu inglês a partir de hoje?",
+                    tip: "Anote as exatas palavras que ele usar. Se ele disser 'travo na reunião', use a palavra 'travar' no Passo 4.",
+                    donts: "Jamais passe para o próximo passo se o cliente não te der um SIM convicto na última pergunta."
+                },
+                conhecido: {
+                    script: "<strong>Você:</strong> Como o inglês mais te ajudaria hoje na sua vida profissional? O que mudaria na sua carreira se você já fosse fluente?<br><br><strong>Você:</strong> Cara, sabendo que isso é tão importante, o que te impediu de focar no inglês até agora? Falta de tempo, grana ou não achou o método certo?<br><br><strong>Você:</strong> Entendi. E me diz uma coisa com sinceridade: se eu conseguir te apresentar um projeto prático que resolva esse seu problema de <strong>[Dor do Cliente]</strong>, que caiba no seu bolso e na sua rotina, você está disposto a resolver esse problema do inglês agora?",
+                    tip: "Mantenha o tom de conselho saudável. Use a dor dele como combustível para ele mesmo tomar a decisão.",
+                    donts: "Não tente empurrar a solução antes de entender completamente qual é o calcanhar de aquiles dele."
+                }
+            },
+            3: {
+                title: "Decisão Imediata (D.I.)", label: "Passo 3", icon: "fa-handshake",
+                objective: "O momento mais importante. Eliminar a desculpa do 'Vou pensar e te aviso'. É um acordo maduro de honestidade mútua feito ANTES de apresentar o produto.",
+                referido: {
+                    script: "<strong>Você:</strong> Então vamos lá! Eu vou te explicar como funciona o curso, mas antes eu queria fazer um combinado com você, até em respeito ao seu tempo, afinal eu sei que ele é curto, assim como o meu.<br><br><strong>Você:</strong> Eu vou te pedir que fique à vontade para ser bem objetivo comigo, ok? Se você não gostar da metodologia, ou não couber no seu bolso ou tempo, você fica bem à vontade para me dizer um <strong>NÃO sincero</strong> no final, combinado? <em>(Espere ele dizer combinado)</em><br><br><strong>Você:</strong> Por outro lado, se você amar a metodologia, se eu puder te ajudar a resolver o seu inglês para <strong>[Dor do Cliente]</strong> e se encaixar no seu tempo e orçamento... eu quero que você me fale e a gente já faz a sua matrícula no final da ligação, assim como fiz com a <strong>[Nome da pessoa que indicou]</strong>. Fechado?<br><br><strong>Você:</strong> Perfeito. E é você quem toma suas decisões financeiras, certo?",
+                    tip: "Seja firme e pareça natural. O cliente precisa concordar expressamente por voz (esperar ele dizer o 'combinado').",
+                    donts: "Esquecer a D.I. é o maior erro do vendedor iniciante. Sem D.I., o cliente escapará no final."
+                },
+                conhecido: {
+                    script: "<strong>Você:</strong> Vou te explicar o projeto do curso agora, mas como somos amigos, vamos fazer um combinado super sincero: se você não puder fazer, se não gostar ou se achar que não cabe no seu orçamento, me fala um <strong>NÃO</strong> bem sincero e a gente continua amigo, combinado?<br><br><strong>Você:</strong> Mas, por outro lado, se você gostar e ver que cabe no bolso direitinho, a gente inicia sua matrícula hoje mesmo e te dou a bolsa. Fechado?<br><br><strong>Você:</strong> E só para confirmar, é você mesmo quem decide sobre as suas finanças, né?",
+                    tip: "Use a amizade para reforçar que não há problema em dar um NÃO claro em vez de enrolar com 'vou pensar'.",
+                    donts: "Não diminua a importância do combinado só porque vocês se conhecem."
+                }
+            },
+            4: {
+                title: "Speech (Apresentação)", label: "Passo 4", icon: "fa-play",
+                objective: "Apresentar a Wise Up Online conectando a plataforma com a dor do cliente. Focar em acesso Netflix, aulas 30min e a IA Wally.",
+                referido: {
+                    script: "<strong>Você:</strong> A plataforma funciona estilo Netflix, com acesso 24h por dia para você assistir de onde quiser. Nossas aulas são curtas e objetivas, duram de <strong>30 a 40 minutos</strong>. Cabem algumas aulas assim na sua agenda?<br><br><strong>Você:</strong> O nosso objetivo é o inglês do dia a dia focado em conversação. Nós temos documentários gravados nos EUA com qualidade de cinema.<br><br><strong>🎯 SELECIONE O MÓDULO DA DOR:</strong><br>• <em>Se Dia a Dia:</em> Módulo <strong>Cities</strong>: você aprende se apresentar, direções e locais vivenciando as ruas de Nova York e Miami.<br>• <em>Se Viagem:</em> Módulo <strong>Travel</strong>: focado em aeroportos, hotéis, restaurantes e imigração. Nunca mais passe perrengue.<br>• <em>Se Carreira:</em> Módulo <strong>Business</strong>: inglês para entrevistas, liderança e negociação. Funciona como um MBA.<br><br><strong>Você (A Cartada):</strong> E a cereja do bolo: nós temos uma Inteligência Artificial, o <strong>Wally</strong>. Logo após a aula, você usa o Wally por voz no celular para treinar a sua conversação e se preparar para resolver o seu caso de <strong>[Dor do Cliente]</strong>!<br><br><strong>Você:</strong> O que achou dessa metodologia? Sente que ela resolve o seu problema?",
+                    tip: "Não perca tempo explicando módulos que o cliente não demonstrou interesse. Se ele quer viajar, foque apenas no Travel.",
+                    donts: "Falar demais sobre regras de gramática. O cliente WSP compra a praticidade e o status, não o verbo to be."
+                },
+                conhecido: {
+                    script: "<strong>Você:</strong> Cara, a plataforma é como se fosse a Netflix do inglês. Acesso 24h, aulas de <strong>30 a 40 minutos</strong> gravadas lá nos Estados Unidos. Dá para encaixar na sua semana?<br><br><strong>Você:</strong> Você tem o módulo <strong>Cities</strong> para aprender a se virar do básico, o <strong>Travel</strong> para viagens internacionais e o <strong>Business</strong> para você focar no trabalho e entrevistas.<br><br><strong>Você:</strong> O mais legal é que os professores são nativos que falam português, e no final da aula você treina a fala com o <strong>Wally</strong>, nossa Inteligência Artificial que simula conversas reais por voz.<br><br><strong>Você:</strong> O que você achou? Qual ponto mais te chamou a atenção? Isso resolve a sua dor com o inglês?",
+                    tip: "Transmita entusiasmo sobre a qualidade visual cinematográfica das aulas.",
+                    donts: "Não seja monótono. A energia na apresentação da plataforma é o que contagia o comprador."
+                }
+            },
+            5: {
+                title: "Fechamento", label: "Passo 5", icon: "fa-credit-card",
+                objective: "Ancorar o preço presencial e fechar o plano Vitalício. O controle emocional aqui é fundamental: o silêncio após anunciar o valor é a regra mais importante do vendedor.",
+                referido: {
+                    script: "<strong>Você:</strong> Sabendo que encaixou no tempo e você gostou, vamos falar de bolso. Você tem noção de quanto custa uma boa escola de inglês presencial na sua região hoje? <em>(Espera resposta)</em><br><br><strong>Você:</strong> Na nossa escola presencial, o aluno investe de R$ 800 a R$ 1.000 por mês, fora material.<br><br><strong>Você:</strong> Porém, aqui na plataforma online, com a bolsa de indicação aplicada, a sua assinatura é <strong>VITALÍCIA</strong>. Vira um patrimônio seu pra vida toda. O investimento fica por apenas <strong>12 parcelas de R$ 349,00</strong>.<br><br><strong>Você:</strong> <em>(AQUI VOCÊ FECHA A BOCA)</em> ... Cabe no bolso hoje, <strong>[Nome do Cliente]</strong>?<br><br><strong>🟢 SE COUBER:</strong> Maravilha! Prefere que eu te mande o link ou você me dita os dados e eu preencho aqui no sistema pra ir mais rápido? Me dá seu Nome completo...<br><br><strong>🟡 SE NÃO COUBER (Resgate):</strong> Entendi. A minha última opção para te ajudar é o <strong>Plano Anual</strong>. É o mesmo curso, mas por 1 ano de acesso. Fica por apenas <strong>12x de R$ 179,00</strong>. Assim te ajuda a começar hoje?",
+                    tip: "Regra de Ouro: Fale '12x de 349' e cale a boca. O primeiro a falar perde. Aguente o desconforto do silêncio.",
+                    donts: "Nunca ofereça o Plano Anual de R$ 179 de cara. Ele serve exclusivamente como rede de segurança (downsell)."
+                },
+                conhecido: {
+                    script: "<strong>Você:</strong> Cara, na nossa escola física o valor normal é uns R$ 800 por mês.<br><br><strong>Você:</strong> Como eu consegui a bolsa para você pelo meu treinamento, o seu acesso vira <strong>VITALÍCIO</strong>, é pra vida toda, por apenas <strong>12x de R$ 349,00</strong>.<br><br><strong>Você:</strong> <em>(CALA A BOCA)</em> ... Cabe no bolso hoje, <strong>[Nome do Cliente]</strong>?<br><br><strong>🟢 SE COUBER:</strong> Show! Vamos preencher aqui rapidão pra eu já garantir a tua vaga. Me passa teu e-mail...<br><br><strong>🟡 SE NÃO COUBER:</strong> Cara, a última carta na manga que eu tenho pra te ajudar é o <strong>Plano Anual</strong>. O valor cai bastante, fica acesso de 1 ano por <strong>12x de R$ 179,00</strong>. Fica mais confortável pra ti?",
+                    tip: "Trate o preço com naturalidade. R$ 349 mensais por um acesso vitalício a um produto nível Netflix é muito barato.",
+                    donts: "Nunca justifique o preço com 'ah, é que tem muito conteúdo'. Apenas diga o valor e espere."
+                }
+            },
+            6: {
+                title: "Referidos", label: "Passo 6", icon: "fa-users-cog",
+                objective: "O motor da WSP. Coletar a lista de 25 contatos para manter o seu funil aquecido. Deve ser feito INDEPENDENTEMENTE se a pessoa comprou ou não.",
+                referido: {
+                    script: "<strong>🟢 SE MATRICULOU:</strong><br><strong>Você:</strong> Parabéns pela decisão! Me manda um 'oi' no WhatsApp. O meu trabalho funciona 100% por indicações. Agora vou te dar a chance de presentear os seus amigos. Clica no clipe de anexar contatos no WhatsApp.<br><br>Seleciona aí pelo menos <strong>25 pessoas</strong> do seu convívio. Não se preocupe se eles têm interesse ou se falam inglês, esse diagnóstico é comigo. Pode ir selecionando de A a Z enquanto eu libero seus módulos aqui.<br><br><strong>🔴 SE NÃO MATRICULOU:</strong><br><strong>Você:</strong> Tudo bem, entendo que não é seu momento. Mas antes de eu te mandar um vídeo de demonstração, pode me avaliar?<br><br>A minha supervisão me avalia pela quantidade de indicações por ligação. Assim como você recebeu essa chance da <strong>[Nome da pessoa que indicou]</strong>, abre seus contatos no WhatsApp e seleciona <strong>25 pessoas</strong> para me ajudar a bater a minha meta com a supervisão hoje. Em qual letra você está?",
+                    tip: "Não pergunte 'você tem indicações?'. Assuma o comando e diga o passo a passo: 'Abre o WhatsApp, clica no clipe...'",
+                    donts: "Aceitar a desculpa 'Vou ver quem quer e depois te mando'. Eles nunca mandam depois. Pegue os nomes na hora, na linha."
+                },
+                conhecido: {
+                    script: "<strong>🟢 SE MATRICULOU:</strong><br><strong>Você:</strong> Cara, que massa que deu certo! Como eu te falei, meu trabalho aqui é todo por indicação. Abre seus contatos do WhatsApp aí e seleciona umas <strong>25 pessoas</strong> de A a Z pra me indicar. Me ajuda demais a bater minha meta de hoje! Vai anexando aí.<br><br><strong>🔴 SE NÃO MATRICULOU:</strong><br><strong>Você:</strong> Poxa, que pena que não é o momento, mas obrigado por ter me ouvido treinar!<br><br>Cara, já que gostou da apresentação, abre a sua agenda aí e seleciona <strong>25 contatos</strong> de A a Z pra eu apresentar o projeto. Isso salva a minha avaliação de hoje com o meu gestor. Vai mandando aí, tá em qual letra?",
+                    tip: "Seja insistente, mas mantenha a cordialidade e o humor. O seu volume de ligações de amanhã depende desse passo hoje.",
+                    donts: "Ter vergonha de pedir. Esse é o processo padrão de quem tem sucesso na WSP."
+                }
+            },
+            7: {
+                title: "Validação", label: "Passo 7", icon: "fa-paper-plane",
+                objective: "Garantir que os 25 leads captados atendam a sua ligação amanhã. O cliente atual deve enviar uma mensagem endossando a sua ligação.",
+                referido: {
+                    script: "<strong>Você:</strong> Legal, recebi os contatos aqui! Agora, para os seus amigos não acharem que é spam quando eu ligar, vou te enviar um texto padrão aqui no chat.<br><br><strong>Você:</strong> Copia o texto <em>(para não ficar com marca de 'encaminhado')</em> e envia individualmente para os 25 contatos que você me mandou.<br><br><strong>O TEXTO É:</strong><br><em>'Oi! Tudo bem? Te indiquei para um curso de inglês online bem bacana com bolsa parcial. O <strong>[Seu Nome]</strong>, gestor da escola, vai te ligar nos próximos dias. Pedi pra ele te priorizar, beleza?'</em><br><br><strong>Você:</strong> Quem for te respondendo pedindo detalhes, me dá um toque aqui que eu coloco como prioridade para ligar!",
+                    tip: "Se a pessoa estiver enrolando, acompanhe ela ditar de 5 em 5 para garantir que a mensagem seja enviada.",
+                    donts: "Não desligue a ligação antes do cliente enviar as mensagens de validação. Isso esfria o lead."
+                },
+                conhecido: {
+                    script: "<strong>Você:</strong> Valeu demais pelos contatos, cara! Olha só, pra essa galera não achar estranho quando eu ligar do nada, faz o seguinte: manda essa mensagem que eu acabei de te mandar aqui no WhatsApp pra eles.<br><br><strong>O TEXTO É:</strong><br><em>'Fala cara! Tudo bem? Te indiquei para um curso de inglês online que tem uma bolsa parcial. O <strong>[Seu Nome]</strong>, que trabalha na escola, vai te ligar nos próximos dias para te explicar. Pedi pra ele te dar prioridade lá!'</em><br><br><strong>Você:</strong> É só copiar e encaminhar para essa lista aí. Quem te responder pedindo mais info, me manda um toque.",
+                    tip: "Deixe claro que isso facilita o seu trabalho e é protocolo para a liberação das bolsas.",
+                    donts: "Deixar o amigo enviar áudio longo explicando o curso. O texto padrão é melhor para gerar curiosidade."
+                }
+            }
+        };
+
+        // --- BANCO DE DADOS: OBJEÇÕES (ETAPA 8) ---
+        const objectionsData = [
+            {
+                id: "obj_pensar", category: "Procrastinação / Fuga", icon: "fa-brain", title: "Vou pensar / Preciso refletir",
+                script: "<strong>Você:</strong> Entendi, <strong>[Nome do Cliente]</strong>. Até por isso perguntei no início da ligação se seria para esse momento, e como você disse que sim, a gente seguiu, entendeu?<br><br>Quando a pessoa começa a falar que vai pensar, você concorda que é um sinal de procrastinação? E aí nem vale a pena ceder essa bolsa para quem não vai se dedicar de verdade.<br><br>Quando a gente deixa para depois, acaba nunca fazendo e sempre terão outras desculpas. É realmente do seu interesse subir de nível e resolver a dor de <strong>[Dor do Cliente]</strong>? Ou não tem interesse mesmo?"
+            },
+            {
+                id: "obj_tempo", category: "Procrastinação / Fuga", icon: "fa-clock", title: "Não tenho tempo",
+                script: "<strong>Você:</strong> A vida de adulto é corrida mesmo... Se a gente parar pra pensar, não existe momento ideal, existe prioridade.<br><br>Você acredita que investindo em você, ser mais competitivo e ganhar mais, refletiria na sua família?<br><br>Me permite fazer um comentário? O ser humano tem uma capacidade incrível de procrastinar, a gente sempre vai ter algo a fazer. Se estivesse decidido, já estaria fazendo o inglês. Você acha que depois vai ter tempo, ou vai arrumar outra prioridade? Por que não adiar a academia daqui a 6 meses ao invés do inglês?"
+            },
+            {
+                id: "obj_frente", category: "Procrastinação / Fuga", icon: "fa-calendar-alt", title: "Vou fazer mais pra frente",
+                script: "<strong>Você:</strong> <strong>[Nome do Cliente]</strong>, você me disse que precisa do inglês para <strong>[Dor do Cliente]</strong>... Você pretende ficar adiando até quando?<br><br>Te falo isso porque o tempo passa e é natural a gente jogar necessidades pra frente. E sabe quando a gente se dá conta? Quando perde uma oportunidade grande.<br><br>Aí vem a questão: está confortável do jeito que está ou vale a pena tomar uma decisão pro seu futuro? Sinceramente, o inglês de milhares de alunos já está resolvido hoje, mas e o seu?"
+            },
+            {
+                id: "obj_teste", category: "Metodologia", icon: "fa-flask", title: "Queria testar 7 dias / Ver como é",
+                script: "<strong>Você:</strong> A Wise Up é uma multinacional com mais de 30 anos no mercado. Você deve ver período de 'teste' em empresas iniciantes na internet. Você acha que a Wise Up se tornou a maior da América Latina com testes ou com resultado de alunos?<br><br>Ninguém fala inglês testando por 7 dias e parando no meio do caminho. Com todo respeito, aqui não é cursinho que precisa de 'test drive'. Quando você vai pra um intercâmbio, você paga antes e conhece lá, não é? A lógica do comprometimento aqui é a mesma."
+            },
+            {
+                id: "obj_contas", category: "Financeiro", icon: "fa-calculator", title: "Vou ter que fazer as contas",
+                script: "<strong>Você:</strong> Você precisa mesmo fazer conta, <strong>[Nome do Cliente]</strong>? O seu orçamento está tão limitado assim que vai apertar?<br><br>Eu estou aqui pra ajudar, mas pensa comigo: 12x de R$ 349 (ou R$ 179 no anual) é o valor simbólico de uma saída no final de semana ou de gasolina do carro. É uma questão de dar prioridade pro seu futuro.<br><br>Vamos lá, deixa eu entender: você realmente quer? Ou na verdade não tem interesse, e está usando a desculpa da conta? Se não quiser, não tem problema, eu dou a bolsa pra outra pessoa."
+            },
+            {
+                id: "obj_cartao", category: "Financeiro", icon: "fa-credit-card", title: "Não tenho limite / Sem Cartão",
+                script: "<strong>Você:</strong> Entendo. Mas me diz, como você faz para comprar coisas online ou pedir Uber/Ifood? Quem te ajuda quando você precisa?<br><br><strong>[Nome do Cliente]</strong>, quem quer de verdade, dá um jeito. Você pode pegar o cartão emprestado com um familiar, a gente pode passar em dois cartões diferentes para dividir o limite, ou você pode ligar no banco e pedir um ajuste provisório no app agora.<br><br>Se a gente resolver a questão do limite, a gente finaliza a matrícula agora?"
+            },
+            {
+                id: "obj_virada", category: "Financeiro", icon: "fa-calendar-check", title: "Quero passar o cartão dia X",
+                script: "<strong>Você:</strong> <strong>[Nome do Cliente]</strong>, como combinamos na D.I., o nosso contato é único e objetivo. Deixa eu te perguntar uma coisa:<br><br>Se a sua empresa te enviasse um e-mail amanhã dizendo que vão cortar funcionários e só vai ficar quem estiver matriculado no inglês... você esperaria até o dia 20 pra arrumar um jeito?<br><br>Claro que não. Então pega emprestado com alguém de confiança só pra passar hoje e garantir a bolsa, e dia 20 você paga a pessoa. Podemos fazer assim?"
+            },
+            {
+                id: "obj_cancelar", category: "Metodologia", icon: "fa-ban", title: "E se eu quiser cancelar?",
+                script: "<strong>Você:</strong> <strong>[Nome do Cliente]</strong>, se você já está pensando em desistir antes mesmo de começar, eu prefiro nem te ingressar no sistema.<br><br>Sabe por quê? Porque você não vai trazer resultado para a escola e nem pra sua vida saindo antes.<br><br>Tem como não gostar de uma Ferrari? Você tá levando a Ferrari dos cursos de inglês pagando o preço de um Fusca. Você comprou seu celular pensando que ia devolver se perdesse o emprego? A gente não planeja falhar. Foca no seu resultado!"
+            },
+            {
+                id: "obj_aprender", category: "Metodologia", icon: "fa-graduation-cap", title: "Não sei se vou aprender / Se acostumo",
+                script: "<strong>Você:</strong> Concorda comigo que quem quer aprender de verdade não precisa nem de curso? A pessoa aprende até sozinha, com música, YouTube...<br><br>Então, com a estrutura cinematográfica que eu te mostrei, é óbvio que você vai aprender. É um método dinâmico e o Wally tá lá pra te forçar a falar.<br><br>As pessoas só se esforçam para o que realmente importa pra elas. Mudar a sua vida e resolver <strong>[Dor do Cliente]</strong> é importante pra você? Então você vai dar conta."
+            },
+            {
+                id: "obj_ao_vivo", category: "Metodologia", icon: "fa-chalkboard-teacher", title: "Tem aula ao vivo / Tirar dúvida?",
+                script: "<strong>Você:</strong> Nós temos a área Premium de conversação ao vivo, sim, mas é só para quem já é aluno da plataforma e eu preciso avaliar o seu perfil primeiro.<br><br>Mas deixa eu te perguntar: como uma criança aprende a língua nativa? Primeiro ela Ouve, depois Fala, e só depois Lê e Escreve, certo?<br><br>O foco da plataforma não é tirar dúvida de gramática. Quantos % você entende de um filme sem legenda hoje? O negócio é TREINO de ouvido e fala, e é isso que o curso faz por você. A comunicação prática importa mais que a regra."
+            },
+            {
+                id: "obj_amigo", category: "Procrastinação / Fuga", icon: "fa-user-friends", title: "Vou ver com meu amigo/esposa antes",
+                script: "<strong>Você:</strong> Você tem interesse em se desenvolver realmente? O seu amigo começou agora, ele gostou e passou pra você, mas ele não vai estudar por você. Quem vai decidir o seu futuro é você.<br><br>Se ficou com alguma dúvida técnica, eu estou aqui como representante da escola pra te responder. Você é casado? Se importa se eu falar com a sua esposa então pra ver se você vai se dedicar ao inglês?<br><br>Porque é isso que você está me dizendo nas entrelinhas: que você não toma a própria decisão ou está desconfiando do meu lado profissional. O que é de verdade?"
+            },
+            {
+                id: "obj_valor", category: "Preço Antecipado", icon: "fa-money-bill-wave", title: "Mas qual é o valor? (Me diz logo)",
+                script: "<strong>Você:</strong> Pode ficar tranquilo, já chego na parte financeira. Mas eu quero fazer meu trabalho com qualidade aqui pra você.<br><br>Pensa comigo: se eu te pergunto se você quer comprar um carro, você vai querer saber o modelo, o ano, os opcionais... Não depende só do valor. Você precisa saber primeiro no que vai investir o seu tempo e dinheiro, e aí sim ver se vale o que custa, concorda?<br><br>Me dá mais um minuto para te explicar a plataforma e a gente já fala de valores."
+            }
+        ];
+
+        let currentStep = 1;
+        let subMode = "referido"; // referido ou conhecido
+
+        function selectStep(stepNum) {
+            currentStep = stepNum;
+            updateUI();
+        }
+
+        function setSubMode(mode) {
+            subMode = mode;
+            
+            const btnReferido = document.getElementById("btn-sub-referido");
+            const btnConhecido = document.getElementById("btn-sub-conhecido");
+            
+            if (mode === "referido") {
+                btnReferido.className = "px-3 py-1.5 text-xs sm:text-sm font-semibold rounded bg-emerald-500 text-slate-950 transition-colors";
+                btnConhecido.className = "px-3 py-1.5 text-xs sm:text-sm font-semibold rounded text-slate-400 hover:text-slate-200 transition-colors";
+            } else {
+                btnConhecido.className = "px-3 py-1.5 text-xs sm:text-sm font-semibold rounded bg-emerald-500 text-slate-950 transition-colors";
+                btnReferido.className = "px-3 py-1.5 text-xs sm:text-sm font-semibold rounded text-slate-400 hover:text-slate-200 transition-colors";
+            }
+            
+            updateUI();
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateUI();
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < 8) { // Alterado para 8
+                currentStep++;
+                updateUI();
+            }
+        }
+
+        function renderObjectionsGrid() {
+            const grid = document.getElementById('objections-grid');
+            grid.innerHTML = '';
+            
+            objectionsData.forEach(obj => {
+                const btn = document.createElement('button');
+                btn.className = "obj-btn bg-slate-950 border border-slate-800 hover:border-orange-500/50 text-slate-300 hover:text-orange-400 rounded-lg p-3 text-left transition flex flex-col gap-1 items-start w-full";
+                btn.onclick = () => showObjectionDetails(obj.id, btn);
+                
+                btn.innerHTML = `
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">${obj.category}</span>
+                    <span class="text-sm font-semibold"><i class="fas ${obj.icon} text-orange-500/70 mr-1 w-4"></i> ${obj.title}</span>
+                `;
+                grid.appendChild(btn);
+            });
+        }
+
+        function showObjectionDetails(id, btnElement) {
+            // Remover classe active de todos
+            document.querySelectorAll('.obj-btn').forEach(b => b.classList.remove('active'));
+            // Adicionar no clicado
+            btnElement.classList.add('active');
+
+            const objData = objectionsData.find(o => o.id === id);
+            if (objData) {
+                const displayArea = document.getElementById('objection-display');
+                displayArea.classList.remove('hidden');
+                document.getElementById('obj-display-title').innerHTML = `<i class="fas ${objData.icon} mr-2"></i> ${objData.title}`;
+                
+                // Aplicar substituição de Dossiê no texto da objeção
+                const formattedScript = applyDossierReplacements(objData.script);
+                document.getElementById('obj-display-text').innerHTML = formattedScript;
+            }
+        }
+
+        function applyDossierReplacements(rawScript) {
+            const sellerEl = document.getElementById('input-seller');
+            const leadEl = document.getElementById('input-lead');
+            const refEl = document.getElementById('input-ref');
+            const painEl = document.getElementById('input-pain');
+
+            const sellerName = sellerEl ? sellerEl.value.trim() : '';
+            const leadName = leadEl ? leadEl.value.trim() : '';
+            const refName = refEl ? refEl.value.trim() : '';
+            const painName = painEl ? painEl.value.trim() : '';
+
+            const fmtSeller = sellerName ? `<span class="text-blue-300 font-bold bg-blue-900/40 px-1 rounded">${sellerName}</span>` : '[Seu Nome]';
+            const fmtLead = leadName ? `<span class="text-emerald-300 font-bold bg-emerald-900/40 px-1 rounded">${leadName}</span>` : '[Nome do Cliente]';
+            const fmtRef = refName ? `<span class="text-emerald-300 font-bold bg-emerald-900/40 px-1 rounded">${refName}</span>` : '[Nome da pessoa que indicou]';
+            const fmtPain = painName ? `<span class="text-amber-300 font-bold bg-amber-900/40 px-1 rounded">${painName}</span>` : '[Dor do Cliente]';
+
+            let formattedScript = rawScript;
+            formattedScript = formattedScript.replace(/\[Seu Nome\]/gi, fmtSeller);
+            formattedScript = formattedScript.replace(/\[Nome do Cliente\]/gi, fmtLead);
+            formattedScript = formattedScript.replace(/\[Nome da pessoa que indicou\]/gi, fmtRef);
+            formattedScript = formattedScript.replace(/\[Nome do Amigo\]/gi, fmtRef); // Fallback
+            formattedScript = formattedScript.replace(/\[Dor do Cliente\]/gi, fmtPain);
+
+            return formattedScript;
+        }
+
+        function updateUI() {
+            try {
+                // Update Lateral Navigation visually
+                for (let i = 1; i <= 8; i++) {
+                    const element = document.getElementById(`card-step-${i}`);
+                    if (!element) continue;
+                    
+                    const stepNumBadge = element.querySelector('.step-number');
+                    
+                    if (i === currentStep) {
+                        if(i === 8) {
+                            element.classList.add("active-step-objection");
+                            if(stepNumBadge) {
+                                stepNumBadge.classList.add("bg-orange-500", "border-orange-500", "text-slate-950");
+                                stepNumBadge.classList.remove("bg-slate-900", "border-slate-800", "text-slate-400");
+                                stepNumBadge.innerHTML = `<i class="fas fa-fire"></i>`;
+                            }
+                        } else {
+                            element.classList.add("active-step");
+                            if(stepNumBadge) {
+                                stepNumBadge.classList.add("bg-emerald-500", "border-emerald-500", "text-slate-950");
+                                stepNumBadge.classList.remove("bg-slate-900", "border-slate-800", "text-slate-400");
+                            }
+                        }
+                    } else {
+                        element.classList.remove("active-step", "active-step-objection");
+                        if(i === 8) {
+                            if(stepNumBadge) {
+                                stepNumBadge.classList.remove("bg-orange-500", "border-orange-500", "text-slate-950");
+                                stepNumBadge.classList.add("bg-slate-900", "border-slate-800", "text-slate-400");
+                                stepNumBadge.innerHTML = `<i class="fas fa-fire text-orange-500/50"></i>`;
+                            }
+                        } else {
+                            if(stepNumBadge) {
+                                stepNumBadge.classList.remove("bg-emerald-500", "border-emerald-500", "text-slate-950");
+                                stepNumBadge.classList.add("bg-slate-900", "border-slate-800", "text-slate-400");
+                            }
+                        }
+                    }
+                }
+
+                const standardContent = document.getElementById('standard-content');
+                const objectionsContent = document.getElementById('objections-content');
+                const progressContainer = document.getElementById('progress-container');
+                const panel = document.getElementById('detail-panel');
+
+                if (currentStep === 8) {
+                    // Modo Central de Objeções
+                    if(standardContent) standardContent.classList.add('hidden');
+                    if(objectionsContent) objectionsContent.classList.remove('hidden');
+                    if(progressContainer) progressContainer.classList.add('hidden'); // Esconde "Etapa x de 7"
+                    
+                    if(panel) {
+                        panel.classList.remove('border-slate-800');
+                        panel.classList.add('border-orange-900/50');
+                    }
+                    
+                    // Aplicar Dossiê ao texto da objeção ativa (se houver alguma aberta)
+                    const activeBtn = document.querySelector('.obj-btn.active');
+                    if (activeBtn) {
+                        const objTitleEl = document.getElementById('obj-display-title');
+                        if(objTitleEl) {
+                            const objTitle = objTitleEl.innerText.trim();
+                            const matchedObj = objectionsData.find(o => objTitle.includes(o.title));
+                            if(matchedObj) showObjectionDetails(matchedObj.id, activeBtn);
+                        }
+                    }
+
+                } else {
+                    // Modo Padrão (Passos 1 a 7)
+                    if(standardContent) standardContent.classList.remove('hidden');
+                    if(objectionsContent) objectionsContent.classList.add('hidden');
+                    if(progressContainer) progressContainer.classList.remove('hidden');
+                    
+                    if(panel) {
+                        panel.classList.add('border-slate-800');
+                        panel.classList.remove('border-orange-900/50');
+                    }
+
+                    // Carregar Dados Atuais do Passo Padrão
+                    const data = stepData[currentStep];
+                    if(data) {
+                        const content = data[subMode];
+
+                        // Renderizar Textos no Painel com substituição
+                        document.getElementById("active-step-label").innerText = data.label;
+                        document.getElementById("active-step-title").innerText = data.title;
+                        document.getElementById("active-step-objective").innerText = data.objective;
+                        document.getElementById("active-step-script").innerHTML = applyDossierReplacements(content.script);
+                        document.getElementById("active-step-donts").innerText = content.donts;
+                        document.getElementById("active-step-tip").innerText = content.tip;
+                        document.getElementById("progress-indicator").innerText = currentStep;
+
+                        // Atualizar Ícone
+                        const iconElement = document.getElementById("active-step-icon");
+                        if(iconElement) iconElement.className = `fas ${data.icon}`;
+                    }
+                }
+
+                // Controle dos Botões de Voltar e Avançar
+                const btnPrev = document.getElementById("btn-prev");
+                const btnNext = document.getElementById("btn-next");
+                if(btnPrev) btnPrev.disabled = currentStep === 1;
+                if(btnNext) btnNext.disabled = currentStep === 8;
+            } catch (err) {
+                console.error("Erro ao atualizar a UI:", err);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-msg');
+            
+            msgEl.innerText = message;
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3000);
+        }
+
+        function copyScript(elementId) {
+            const scriptElement = document.getElementById(elementId);
+            
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = scriptElement.innerHTML.replace(/<br\s*[\/]?>/gi, "\n");
+            const cleanText = tempDiv.innerText || tempDiv.textContent;
+
+            navigator.clipboard.writeText(cleanText).then(() => {
+                showToast('Roteiro copiado com sucesso!');
+            }).catch(err => {
+                console.error('Falha ao copiar: ', err);
+                
+                // Fallback manual antigo se o clipboard API falhar
+                const textArea = document.createElement("textarea");
+                textArea.value = cleanText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Roteiro copiado (via fallback)!');
+                } catch (err) {
+                    showToast('Erro ao copiar roteiro.');
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        // Inicializar a UI no carregamento
+        window.onload = function() {
+            renderObjectionsGrid();
+            updateUI();
+            
+            // Adicionar event listeners robustos para garantir atualização em tempo real (instantânea)
+            const inputs = ['input-seller', 'input-lead', 'input-ref', 'input-pain'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    // input cobre digitação rápida, colar texto, etc.
+                    el.addEventListener('input', updateUI);
+                    // keyup age como um fallback adicional
+                    el.addEventListener('keyup', updateUI);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
